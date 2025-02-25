@@ -16,8 +16,8 @@ CountriesShape = gpd.read_file("countries.geo.json")
 CountriesShape = CountriesShape.to_crs(epsg = 4326)
 CountriesShape['Centroids'] = CountriesShape.geometry.centroid
 CountriesPoint = CountriesShape[['id','name', 'Centroids']].set_geometry('Centroids')
-emissions = pd.read_csv("CleanedData/EuropeCo2.csv")
-density = pd.read_csv("CleanedData/EuropePopD.csv")
+emissions = pd.read_csv("co-emissions-per-capita.csv")
+density = pd.read_csv("population-density.csv")
 
 CountryEmissions = merge_clean(CountriesShape, emissions, "id", "Code", ["Entity", "Code"])
 CountryEmissions = CountryEmissions.rename(columns = {'Annual CO₂ emissions (per capita)':'Emissions'})
@@ -26,5 +26,5 @@ CountryEmissions = CountryEmissions.drop(columns = ['Centroids'])
 CountryDensity = merge_clean(CountriesPoint, density, "id", "Code", ["Entity", "Code"])
 CountryDensity = CountryDensity.rename(columns = {'Population density':'PopDensity'})
 
-geojson_to_file(CountryEmissions, "CleanedData/Emissions.geojson")
-geojson_to_file(CountryDensity, "CleanedData/Density.geojson")
+geojson_to_file(CountryEmissions, "GeoJson/Emissions.geojson")
+geojson_to_file(CountryDensity, "GeoJson/Density.geojson")
