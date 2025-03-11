@@ -17,4 +17,4 @@ The primary goal of this project is to deliver a clear and interactive visualiza
 
 ## Applied Libraries and Web Services
 - **GitHub**: For hosting the repository and deploying the web application.
-- - **Excel**: For initial data cleaning and preparation.
+- **Excel**: For initial data cleaning and preparation.
