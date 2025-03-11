@@ -108,5 +108,12 @@ document.addEventListener("DOMContentLoaded", async function () {
       // Change cursor on hover
       map.on('mouseenter', 'country-points', () => map.getCanvas().style.cursor = 'pointer');
       map.on('mouseleave', 'country-points', () => map.getCanvas().style.cursor = '');
+      // Slider event listener
+      document.getElementById('co2-slider').addEventListener('input', function (event) {
+        const value = event.target.value;
+        document.getElementById('co2-value').textContent = `${value} Mt`;
+        // Add logic to filter or update the map based on the slider value
+    });
+      
   });
 });
