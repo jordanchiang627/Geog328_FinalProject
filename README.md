@@ -10,7 +10,10 @@ The primary goal of this project is to deliver a clear and interactive visualiza
 - Provide a resource for policymakers, educators, and the public to explore and compare emissions data.
 
 ## Main Functions
-
+- **Interactive Map**: Visualize carbon emissions per capita and total CO₂ emissions for European countries.
+- **Color Gradient**: Use a color gradient to represent emissions per capita (green for low, yellow for medium, red for high).
+- **Circle Size**: Represent total CO₂ emissions using circle size.
+  
 ## Data Sources
 - **Per Capita Emissions**: [Our World in Data](https://ourworldindata.org/grapher/co-emissions-per-capita)
 - **Population Density**: [Our World in Data](https://ourworldindata.org/grapher/population-density)
