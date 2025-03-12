@@ -1,6 +1,18 @@
 document.addEventListener("DOMContentLoaded", async function () {
     mapboxgl.accessToken = 'pk.eyJ1IjoidGhlbmV4dGdlbiIsImEiOiJjbTZ0dTM4Nm8wNnFxMmpxMzR5aTFlNWNmIn0.0ijMpCWFd8inU3E37iqQQQ';
 
+    const introPage = document.getElementById("intro-page");
+    const startButton = document.getElementById("start-exploring");
+
+    startButton.addEventListener("click", function () {
+        introPage.classList.add("fade-out");
+
+        // Hide the intro page completely after the animation duration (1s)
+        setTimeout(() => {
+            introPage.style.display = "none";
+        }, 1000);
+    });
+
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v10',
@@ -156,24 +168,33 @@ document.addEventListener("DOMContentLoaded", async function () {
             updateMapForYear(year);
         });
 
-        // Click event for popups
-        map.on('click', 'country-points', (e) => {
-            const properties = e.features[0].properties;
-            const population_density = properties.population_density !== undefined 
-                ? properties.population_density
-                : "No Data";
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(`
-                    <strong>${properties.country_name}</strong><br>
-                    Population Density: ${population_density} <br>
-                    Emissions Per Capita: ${properties.emissions_per_capita}
-                `)
-                .addTo(map);
+        // Show info popup on hover
+        let popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
+        
+        map.on('mousemove', 'country-points', (e) => {
+            if (e.features.length > 0) {
+                const properties = e.features[0].properties;
+        
+                popup.setLngLat(e.lngLat)
+                    .setHTML(`
+                        <strong>${properties.country_name}</strong><br>
+                        Population Density: ${properties.population_density} people/km²<br>
+                        Total CO₂ Emissions: ${properties.co2_total} Mt<br>
+                        Emissions Per Capita: ${properties.emissions_per_capita}
+                    `)
+                    .addTo(map);
+            }
         });
 
         // Change cursor on hover
         map.on('mouseenter', 'country-points', () => map.getCanvas().style.cursor = 'pointer');
-        map.on('mouseleave', 'country-points', () => map.getCanvas().style.cursor = '');
+        map.on('mouseleave', 'country-points', () => {
+            map.getCanvas().style.cursor = '';
+            popup.remove(); 
+        });
+        
     });
 });

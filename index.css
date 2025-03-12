@@ -22,15 +22,15 @@ body {
 /* Legend styling */
 #legend {
     position: absolute;
-    bottom: 20px; /* Positioned above the slider */
-    right: 0px;
+    bottom: 25px; 
+    right: 10px;
     background: white;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     font-size: 14px;
-    z-index: 1000; /* Ensure it appears above the map */
+    z-index: 100;
 }
 #legend h4 {
     margin: 0 0 10px 0;
@@ -52,4 +52,79 @@ body {
     margin: 10px 0 0 0;
     font-size: 12px;
     color: #666;
+}
+
+/* Introduction Page Styling */
+.intro {
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.intro-content {
+  max-width: 800px;
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+}
+
+.intro-content h1 {
+  color: #007BFF;
+  margin-bottom: 15px;
+}
+
+.intro-content h2 {
+  color: #333;
+  margin-top: 15px;
+}
+
+.intro-content p, .intro-content ul {
+  color: #555;
+  font-size: 16px;
+  text-align: left;
+}
+
+.intro-content ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+#start-exploring {
+  margin-top: 20px;
+  background-color: #007BFF;
+  color: white;
+  padding: 12px 24px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#start-exploring:hover {
+  background-color: #0056b3;
+}
+
+/* Fade-out animation */
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+  to {
+      opacity: 0;
+      visibility: hidden;
+  }
+}
+
+/* Apply animation class */
+.fade-out {
+  animation: fadeOut 1s ease-out forwards;
 }
