@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/thenextgen/cm85m31ed006g01ss9km1hf9s',
-        center: [10, 52],
-        zoom: 3
+        center: [10, 48.5],
+        zoom: 3.25
     });
 
     // Function to load GeoJSON data
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     90, '#74add1',
                     125, '#4575b4',
                     1650, '#313695'],
-                'fill-opacity': 0.6
+                'fill-opacity': 0.75
             }
         });
 
