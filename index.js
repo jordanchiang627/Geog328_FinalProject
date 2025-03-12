@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", async function () {
     mapboxgl.accessToken = 'pk.eyJ1IjoidGhlbmV4dGdlbiIsImEiOiJjbTZ0dTM4Nm8wNnFxMmpxMzR5aTFlNWNmIn0.0ijMpCWFd8inU3E37iqQQQ';
 
-  const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/light-v10',
-      center: [10, 50],
-      zoom: 3
-  });
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/light-v10',
+        center: [10, 54],
+        zoom: 3
+    });
 
     // Function to load GeoJSON data
     async function loadGeoJSON(url) {
@@ -19,94 +19,161 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-  map.on('load', async () => {
-      // Load datasets
-      const densityGeoJSON = await loadGeoJSON('data/GeoJson/Density.geojson');
-      const emissionsGeoJSON = await loadGeoJSON('data/GeoJson/Emissions.geojson');
-      if (!densityGeoJSON || !emissionsGeoJSON) return;
+    // Initial data load
+    let densityGeoJSON = await loadGeoJSON('data/GeoJson/Density.geojson');
+    let emissionsGeoJSON = await loadGeoJSON('data/GeoJson/Emissions.geojson');
+    if (!densityGeoJSON || !emissionsGeoJSON) return;
+
+    // Function to filter data by year
+    function filterDataByYear(year) {
+        const filteredDensity = {
+            type: "FeatureCollection",
+            features: densityGeoJSON.features.filter(f => f.properties.Year === year)
+        };
+
+        const filteredEmissions = {
+            type: "FeatureCollection",
+            features: emissionsGeoJSON.features.filter(f => f.properties.Year === year)
+        };
+
+        return { filteredDensity, filteredEmissions };
+    }
+
+    // Function to update map layers dynamically
+    function updateMapForYear(year) {
+        const { filteredDensity, filteredEmissions } = filterDataByYear(year);
 
         // Create a Map to store country properties
         const countryDataMap = {};
 
-      // Populate countryDataMap with density data
-      densityGeoJSON.features.forEach(feature => {
-          const countryName = feature.properties.name;
-          countryDataMap[countryName] = {
-              population_density: feature.properties.PopDensity
-          };
-      });
+        // Populate countryDataMap with density data
+        filteredDensity.features.forEach(feature => {
+            const countryName = feature.properties.name;
+            if (!countryDataMap[countryName]) {
+                countryDataMap[countryName] = {}; // Initialize object if not existing
+    }
+        countryDataMap[countryName].population_density = feature.properties.PopDensity;
+});
 
-      // Populate countryDataMap with emission data (merging by country name)
-      emissionsGeoJSON.features.forEach(feature => {
-          const countryName = feature.properties.name;
-          if (countryDataMap[countryName]) {
-              countryDataMap[countryName].co2_total = feature.properties.Emissions;
-          }
-      });
+        // Populate countryDataMap with emission data
+        filteredEmissions.features.forEach(feature => {
+            const countryName = feature.properties.name;
+            if (!countryDataMap[countryName]) {
+                countryDataMap[countryName] = {}; // Initialize if not existing
+    }
+        countryDataMap[countryName].emissionsCapita = feature.properties.Emissions;
+});
 
-      // Generate centroids based on polygons in emissionsGeoJSON
-      const centroidFeatures = emissionsGeoJSON.features.map(feature => {
-          const countryName = feature.properties.name;
-          const properties = countryDataMap[countryName];
-          if (!properties) return null; // Skip if no matching data
+        // Generate centroids based on polygons in emissionsGeoJSON
+        const centroidFeatures = filteredEmissions.features.map(feature => {
+            const countryName = feature.properties.name;
+            const properties = countryDataMap[countryName];
+            if (!properties) return null;
 
-          const emissionsCapita = properties.co2_total / properties.population_density;
+            const emissionsCapita = properties.emissionsCapita;
+            const populationDensity = properties.population_density;
 
-          const centroid = turf.centroid(feature); // Compute centroid
-          return {
-              type: 'Feature',
-              geometry: centroid.geometry,
-              properties: {
-                  country_name: countryName,
-                  population_density: properties.population_density,
-                  co2_total: properties.co2_total,
-                  emissions_per_capita: emissionsCapita
-              }
-          };
-      }).filter(f => f !== null); // Remove null values
+            const centroid = turf.centroid(feature); // Compute centroid
+            return {
+                type: 'Feature',
+                geometry: centroid.geometry,
+                properties: {
+                    country_name: countryName,
+                    emissions_per_capita: emissionsCapita,
+                    population_density: populationDensity
+                }
+            };
+        }).filter(f => f !== null);
 
         const centroidGeoJSON = { type: 'FeatureCollection', features: centroidFeatures };
 
-      // Add source for centroids
-      map.addSource('country-centroids', { type: 'geojson', data: centroidGeoJSON });
+        // Update the sources dynamically
+        map.getSource('pop-density').setData(filteredDensity);
+        map.getSource('country-centroids').setData(centroidGeoJSON);
+    }
 
-      // Add layer to visualize the points
-      map.addLayer({
-          id: 'country-points',
-          type: 'circle',
-          source: 'country-centroids',
-          paint: {
-              // Size based on a combination of population density & emissions
-              'circle-radius': [
-                  'interpolate', ['linear'],
-                  ['get', 'emissions_per_capita'],
-                  0, 5, 1000, 30000
-              ],
-              // Color based on emissions
-              'circle-color': [
-                  'interpolate', ['linear'], ['get', 'co2_total'],
-                  0, '#008000', 5, '#ffff00', 15, '#ff0000'
-              ],
-              'circle-opacity': 0.8
-          }
-      });
+    // Add sources to the map
+    map.on('load', async () => {
+        const { filteredDensity, filteredEmissions } = filterDataByYear(2023); // Default year
 
-      // Click event for displaying info popups
-      map.on('click', 'country-points', (e) => {
-          const properties = e.features[0].properties;
-          new mapboxgl.Popup()
-              .setLngLat(e.lngLat)
-              .setHTML(`
-                  <strong>${properties.country_name}</strong><br>
-                  Population Density: ${properties.population_density} people/km²<br>
-                  Total CO₂ Emissions: ${properties.co2_total}
-                  Emissions Per Capita: ${properties.emissions_per_capita}
-              `)
-              .addTo(map);
-      });
+        map.addSource('pop-density', { type: 'geojson', data: filteredDensity });
+        map.addSource('country-centroids', { type: 'geojson', data: { "type": "FeatureCollection", "features": [] } });
 
-      // Change cursor on hover
-      map.on('mouseenter', 'country-points', () => map.getCanvas().style.cursor = 'pointer');
-      map.on('mouseleave', 'country-points', () => map.getCanvas().style.cursor = '');
-  });
+        // Add layers
+        map.addLayer({
+            id: 'density-layer',
+            type: 'fill',
+            source: 'pop-density',
+            paint: {
+                'fill-color': ['interpolate', ['linear'], ['get', 'PopDensity'],
+                    0, '#e0f3f8',
+                    60, '#abd9e9',
+                    90, '#74add1',
+                    125, '#4575b4',
+                    1650, '#313695'],
+                'fill-opacity': 0.6
+            }
+        });
+
+        map.addLayer({
+            id: 'country-points',
+            type: 'circle',
+            source: 'country-centroids',
+            paint: {
+                'circle-radius': [
+                    'interpolate', ['linear'], ['get', 'emissions_per_capita'],
+                    0, 4, 
+                    3, 8, 
+                    5, 12,
+                    6.5, 18,
+                    8, 25, 
+                    10.5, 35, 
+                    40, 50
+                ],
+                'circle-color': [
+                    'interpolate', ['linear'], ['get', 'emissions_per_capita'],
+                    0, '#008000',
+                    3, '#66A000',
+                    5, '#B0C000',
+                    6.5, '#FFD700',
+                    8, '#FFA500', 
+                    10.5, '#FF4500',
+                    40, '#FF0000'
+                ],
+                'circle-opacity': 0.8
+            }
+        });
+
+        updateMapForYear(2023);
+
+        // Handle slider changes to update the map dynamically
+        const slider = document.getElementById("co2-slider");
+        const sliderValue = document.getElementById("co2-value");
+
+        slider.addEventListener("input", function () {
+            const year = parseInt(slider.value);
+            sliderValue.textContent = year;
+            updateMapForYear(year);
+        });
+
+        // Click event for popups
+        map.on('click', 'country-points', (e) => {
+            const properties = e.features[0].properties;
+            const population_density = properties.population_density !== undefined 
+                ? properties.population_density
+                : "No Data";
+            new mapboxgl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(`
+                    <strong>${properties.country_name}</strong><br>
+                    Population Density: ${population_density} <br>
+                    Emissions Per Capita: ${properties.emissions_per_capita}
+                `)
+                .addTo(map);
+        });
+
+        // Change cursor on hover
+        map.on('mouseenter', 'country-points', () => map.getCanvas().style.cursor = 'pointer');
+        map.on('mouseleave', 'country-points', () => map.getCanvas().style.cursor = '');
+    });
 });

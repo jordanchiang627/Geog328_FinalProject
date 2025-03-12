@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Memorable Events of 2024 and 2023</title>
+    <title>European Carbon Emissions over Time</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 
     <!-- Including the Mapbox GL CSS file -->
@@ -15,55 +15,31 @@
     <link href='index.css' rel='stylesheet' />
     <script defer src='index.js'></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <!-- Add CSS for the legend -->
-    <style>
-        /* Legend styling */
-        #legend {
-            position: absolute;
-            bottom: 80px; /* Positioned above the slider */
-            right: 20px;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            z-index: 1; /* Ensure it appears above the map */
-        }
-        #legend h4 {
-            margin: 0 0 10px 0;
-            font-size: 16px;
-        }
-        #legend div {
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-        }
-        #legend span {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            margin-right: 5px;
-            border-radius: 50%;
-        }
-        #legend p {
-            margin: 10px 0 0 0;
-            font-size: 12px;
-            color: #666;
-        }
-    </style>
 </head>
 
 <body>
     <main id="container">
-      <div id="map"></div>
-      <div class="controls">
-          <label>CO2 Emissions Threshold:</label>
-          <input type="range" id="co2-slider" min="0" max="100" step="1" value="50">
-          <span id="co2-value">50</span> Mt
-      </div>
-
+        <div id="map"></div>
+        <div id="legend">
+            <h4>Legend</h4>
+            <strong>Carbon Emissions Per Capita (in tonnes)</strong>
+            <div><span style="background: #008000;"></span>0 - 3</div>
+            <div><span style="background: #66A000;"></span>3 - 5</div>
+            <div><span style="background: #FFD700;"></span>5 - 8</div>
+            <div><span style="background: #FFA500;"></span>8 - 10.5</div>
+            <div><span style="background: #FF4500;"></span>10.5 - 40</div>
+            <div><span style="background: #ff0000;"></span>40+</div>
+            <strong>Population Density (people/km²)</strong>
+            <div><span style="background: #abd9e9;"></span>0 - 60</div>
+            <div><span style="background: #74add1;"></span>60 - 90</div>
+            <div><span style="background: #4575b4;"></span>90 - 125</div>
+            <div><span style="background: #313695;"></span>125 - 1650</div>
+        </div>
+        <div class="controls">
+            <strong>Carbon Emissions and Population Density since 1950</strong><br><br>
+            <label for="co2-slider">Year: <span id="co2-value">2023</span></label>
+            <input type="range" id="co2-slider" min="1950" max="2023" step="1" value="2023">
+        </div>
     </main>
 </body>
 
