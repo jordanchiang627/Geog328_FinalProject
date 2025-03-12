@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/light-v10',
+        style: 'mapbox://styles/thenextgen/cm85m31ed006g01ss9km1hf9s',
         center: [10, 54],
         zoom: 3
     });
@@ -134,12 +134,12 @@ document.addEventListener("DOMContentLoaded", async function () {
             paint: {
                 'circle-radius': [
                     'interpolate', ['linear'], ['get', 'emissions_per_capita'],
-                    0, 4, 
-                    3, 8, 
+                    0, 4,
+                    3, 8,
                     5, 12,
                     6.5, 18,
-                    8, 25, 
-                    10.5, 35, 
+                    8, 25,
+                    10.5, 35,
                     40, 50
                 ],
                 'circle-color': [
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     3, '#66A000',
                     5, '#B0C000',
                     6.5, '#FFD700',
-                    8, '#FFA500', 
+                    8, '#FFA500',
                     10.5, '#FF4500',
                     40, '#FF0000'
                 ],
@@ -173,11 +173,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             closeButton: false,
             closeOnClick: false
         });
-        
+
         map.on('mousemove', 'country-points', (e) => {
             if (e.features.length > 0) {
                 const properties = e.features[0].properties;
-        
                 popup.setLngLat(e.lngLat)
                     .setHTML(`
                         <strong>${properties.country_name}</strong><br>
@@ -192,8 +191,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         map.on('mouseenter', 'country-points', () => map.getCanvas().style.cursor = 'pointer');
         map.on('mouseleave', 'country-points', () => {
             map.getCanvas().style.cursor = '';
-            popup.remove(); 
+            popup.remove();
         });
-        
     });
 });
