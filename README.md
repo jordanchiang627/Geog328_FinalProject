@@ -12,6 +12,12 @@ The primary goal of this project is to deliver a clear and interactive visualiza
 ## Application URL
 https://jordanchiang627.github.io/Geog328_FinalProject/
 
+## Screenshots
+![1950 Carbon Emissions in Europe](images/screenshot1950.png)
+Europe Carbon Emission (1950)
+![2023 Carbon Emissions in Europe](images/screenshot2023.png)
+Europe Carbon Emissions (2023)
+
 ## Main Functions
 - **Interactive Map**: Visualize carbon emissions per capita and total CO₂ emissions for European countries.
 - **Color Gradient**: Use a color gradient to represent emissions per capita (green for low, yellow for medium, red for high).
