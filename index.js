@@ -182,7 +182,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                     .setHTML(`
                         <strong>${properties.country_name}</strong><br>
                         Population Density: ${properties.population_density} people/km²<br>
-                        Total CO₂ Emissions: ${properties.co2_total} Mt<br>
                         Emissions Per Capita: ${properties.emissions_per_capita}
                     `)
                     .addTo(map);
