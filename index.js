@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/thenextgen/cm85m31ed006g01ss9km1hf9s',
-        center: [10, 54],
+        center: [10, 52],
         zoom: 3
     });
 
