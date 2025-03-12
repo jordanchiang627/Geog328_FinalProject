@@ -11,10 +11,45 @@ body {
 
 .controls {
   position: absolute;
-  top: 10px;
+  bottom: 35px;
   left: 10px;
   background: white;
   padding: 10px;
   border-radius: 5px;
   z-index: 100;
+}
+
+/* Legend styling */
+#legend {
+    position: absolute;
+    bottom: 20px; /* Positioned above the slider */
+    right: 0px;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    z-index: 1000; /* Ensure it appears above the map */
+}
+#legend h4 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+}
+#legend div {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+#legend span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    border-radius: 50%;
+}
+#legend p {
+    margin: 10px 0 0 0;
+    font-size: 12px;
+    color: #666;
 }
