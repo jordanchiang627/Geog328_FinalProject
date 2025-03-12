@@ -100,23 +100,34 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
 
-        // Click event for displaying info popups
-        map.on('click', 'country-points', (e) => {
-            const properties = e.features[0].properties;
-            new mapboxgl.Popup()
-                .setLngLat(e.lngLat)
-                .setHTML(`
-                    <strong>${properties.country_name}</strong><br>
-                    Population Density: ${properties.population_density} people/km²<br>
-                    Total CO₂ Emissions: ${properties.co2_total} Mt<br>
-                    Emissions Per Capita: ${properties.emissions_per_capita}
-                `)
-                .addTo(map);
+        // Show info popup on hover
+        let popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+        });
+        
+        map.on('mousemove', 'country-points', (e) => {
+            if (e.features.length > 0) {
+                const properties = e.features[0].properties;
+        
+                popup.setLngLat(e.lngLat)
+                    .setHTML(`
+                        <strong>${properties.country_name}</strong><br>
+                        Population Density: ${properties.population_density} people/km²<br>
+                        Total CO₂ Emissions: ${properties.co2_total} Mt<br>
+                        Emissions Per Capita: ${properties.emissions_per_capita}
+                    `)
+                    .addTo(map);
+            }
         });
 
         // Change cursor on hover
         map.on('mouseenter', 'country-points', () => map.getCanvas().style.cursor = 'pointer');
-        map.on('mouseleave', 'country-points', () => map.getCanvas().style.cursor = '');
+        map.on('mouseleave', 'country-points', () => {
+            map.getCanvas().style.cursor = '';
+            popup.remove(); // Remove the popup when leaving the feature
+        });
+
 
         // Add slider event listener
         document.getElementById('co2-slider').addEventListener('input', function (event) {
