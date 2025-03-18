@@ -24,7 +24,8 @@ Europe Carbon Emissions (2023)
 - **Circle Size**: Represent total CO₂ emissions using circle size.
 - **Time Slider**: Allows users to explore data from 1950 to 2023.
 - **Popup Information**: Displays detailed information (population density and emissions per capita) when hovering over a country.
-  
+- **Play Button**: Animates the time slider, progressing through the years from 1950 to 2023. The button can be pressed again to pause. The button will automatically loop.
+
 ## Data Sources
 - **Per Capita Emissions**: [Our World in Data](https://ourworldindata.org/grapher/co-emissions-per-capita)
 - **Population Density**: [Our World in Data](https://ourworldindata.org/grapher/population-density)

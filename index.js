@@ -168,6 +168,29 @@ document.addEventListener("DOMContentLoaded", async function () {
             updateMapForYear(year);
         });
 
+        // Adds play button functionality
+        let playButton = document.getElementById("play-button");
+        let playInterval;
+        playButton.addEventListener("click", function () {
+            if (playInterval) {
+                // If the interval is already running, stop it
+                clearInterval(playInterval);
+                playInterval = null;
+            } else {
+                playInterval = setInterval(() => {
+                    let currentYear = parseInt(slider.value);
+                    let nextYear;
+                    if (currentYear == 2023) {
+                        nextYear = 1950;
+                    } else {
+                        nextYear = currentYear + 1;
+                    }
+                    slider.value = nextYear;
+                    slider.dispatchEvent(new Event('input')); // Update the map
+                }, 250); // Update every 1/4 second
+            }
+        });
+
         // Show info popup on hover
         let popup = new mapboxgl.Popup({
             closeButton: false,

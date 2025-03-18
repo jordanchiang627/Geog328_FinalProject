@@ -43,6 +43,7 @@
                 <li><strong>Circle Size:</strong> Represent total CO₂ emissions using circle size.</li>
                 <li><strong>Time Slider:</strong> Allows users to explore data from 1950 to 2023.</li>
                 <li><strong>Popup Information:</strong> Displays detailed information (population density and emissions per capita) when hovering over a country.</li>
+                <li><strong>Play Button:</strong> Animates the time slider, progressing through the years from 1950 to 2023. The button can be pressed again to pause. The button will automatically loop.</li>
             </ul>
 
             <h2>Data Sources</h2>
@@ -85,6 +86,7 @@
             <strong>Carbon Emissions and Population Density since 1950</strong><br><br>
             <label for="co2-slider">Year: <span id="co2-value">2023</span></label>
             <input type="range" id="co2-slider" min="1950" max="2023" step="1" value="2023">
+            <button id="play-button"><i class="fa fa-play" aria-hidden="true"></i></button>
         </div>
     </main>
 </body>
